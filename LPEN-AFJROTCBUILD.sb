@@ -1,0 +1,248 @@
+'Lpen By Liam Childers
+ResetTag:
+Dormant = 1
+end = 0
+tickcount = 0
+'Tick Loader
+TLOD()
+'Program Load
+VARTRIG()
+Init()
+
+'Engine Functionality
+Goto Dormantmode
+ActiveMode:
+EngineActive = 1
+While a < b
+  Shapes.Remove(SCORESYMB)
+  a = a + 1
+  turnclick = 0
+  GraphicsWindow.MouseDown = MCLIC
+  RNG()
+  Program.Delay(c)
+  
+EndWhile
+Dormant= 1
+EngineActive = 0
+RESTEXT()
+Endcard()
+Goto Waitmode
+
+'Subroutine Used to Change Image
+Sub RNG
+  
+  NUMLINES = File.ReadLine("resc\NAMES.ncf",1)
+  IGPLINE = Math.GetRandomNumber(NUMLINES)
+  IGPLINE = IGPLINE + 1
+  IFN = File.ReadLine("resc\NAMES.NCF",IGPLINE)
+  imgpath = DIRPAT2 + IFN
+  Shapes.Remove(IMGBOX)
+  IMGBOX = Shapes.AddImage(imgpath)
+  Shapes.Move(IMGBOX,30,110)
+  tickcount = tickcount + 1
+  Shapes.SetText(Tickbox2,tickcount + "/" + b)
+  Sound.PlayMusic("L8 O7 FD")
+  
+EndSub
+'Tick Loader
+Sub TLOD
+  'Zeros Out Variables B & C
+  b = 0
+  c = 0
+  
+  TextWindow.Title = "LPEN Apha"
+  TextWindow.ForegroundColor = "white"
+  'Session Tick Number
+  TextWindow.WriteLine("How many tiks do you want your session to be?")
+  TextWindow.ForegroundColor = "red"
+  TextWindow.WriteLine("Must Have a Value Greater Than 0")
+  Tiknumc:
+  TextWindow.ForegroundColor = "white"
+  TextWindow.Write(":")
+  b = TextWindow.ReadNumber()
+  'Check For Invalid Inputs
+  If b < 0 Or b = 0 Then
+    TextWindow.ForegroundColor = "Red"
+    TextWindow.WriteLine("Error")
+    TextWindow.WriteLine("The Number Of Ticks Must Be Greater Than 0")
+    Goto Tiknumc
+    'Debug Mode Code (Comment Out Later )
+  ElseIf b = 69420 then
+    Debug()
+    Goto Debugmode
+    
+  EndIf
+  
+  'Sets Tick Legnth
+  TextWindow.ForegroundColor = "white"
+  TextWindow.WriteLine("How how long do you want a tick last?")
+  TextWindow.ForegroundColor = "red"
+  TextWindow.WriteLine("Must Have a Value Greater Than 5")
+  TextWindow.ForegroundColor = "black"
+  TextWindow.BackgroundColor = "yellow"
+  TextWindow.WriteLine("Default Value is 12.55 Seconds")
+  TextWindow.WriteLine("Leave Blank to assume defualt value")
+  TextWindow.BackgroundColor = "black"
+  TextWindow.ForegroundColor = "white"
+  TextWindow.WriteLine("Must Have a Value Greater Than 5")
+  'Legnh Input
+  Ticktimec:
+  TextWindow.ForegroundColor = "white"
+  TextWindow.Write(":")
+  c = TextWindow.ReadNumber()
+  'Checks For Invald Or Special Inputs
+  If c < 5 and c < 0 Then
+    TextWindow.ForegroundColor = "Red"
+    TextWindow.WriteLine("Error")
+    TextWindow.WriteLine("A Tick Must Last At Least 5 Seconds")
+    TextWindow.ForegroundColor = "black"
+    TextWindow.BackgroundColor = "yellow"
+    TextWindow.WriteLine("Default Value is 12.55 Seconds")
+    TextWindow.WriteLine("Leave Blank or Type 0 to assume defualt value")
+    TextWindow.BackgroundColor = "black"
+    TextWindow.ForegroundColor = "White"
+    Goto Ticktimec
+  ElseIf c = 0 Then
+    c = 12.55
+  EndIf
+  DEBUGMODE:
+  c = c * 1000
+  TextWindow.Hide()
+EndSub
+
+'Sets Defualt Variables
+Sub VARTRIG
+  
+  DIRPAT = Program.Directory
+  ifn = "\null.png"
+  DIRPAT2 = DIRPAT + "\resc\"
+  imgpath = DIRPAT2 + IFN
+  XMARK = DIRPAT2 + "X.PNG"
+  CHKMRK = DIRPAT2 + "CHECK.png"
+  DEFPIC = DIRPAT2 + "null.png"
+  
+EndSub
+
+'Graphics Window Setup
+Sub Init
+  GraphicsWindow.Clear()
+  Score = 0
+  GraphicsWindow.KeyUp = Keystroke
+  GraphicsWindow.Height = 500
+  GraphicsWindow.Width = 700
+  GraphicsWindow.Title = "LPEN Apha"
+  GraphicsWindow.BrushColor = "Black"
+  IMGBOX = Shapes.AddImage(DEFPIC)
+  Shapes.Move(IMGBOX,30,110)
+  
+  GraphicsWindow.FontSize = 21.8
+  Tickbox1 = Shapes.AddText("Tick Count:")
+  Controls.SetSize(Tickbox1,138.2,34.5)
+  Shapes.Move(Tickbox1,1,0)
+  
+  GraphicsWindow.BrushColor = "Black"
+  Tickbox2 = Shapes.AddText(tickcount + "/ "+ b)
+  Controls.SetSize(Tickbox2,194.5,24.5)
+  Shapes.Move(Tickbox2,131,0)
+  
+  ScoreCounter1 = Shapes.AddText("Score:")
+  ScoreCounter2 = Shapes.AddText(Score)
+  Shapes.Move(ScoreCounter1,200,0)
+  Shapes.Move(ScoreCounter2,270,0)
+  Shapes.SetText(ScoreCounter2,Score) 
+  GraphicsWindow.MouseDown = ContextCheckM
+EndSub
+
+'Detects Weather Or Not Mouse Input Can Affect 
+Sub MCLIC
+  If turnclick = 1 then 
+    Goto ENS
+  Else 
+    turnclick = 1
+    ScoreInp()  
+    
+  endif
+  
+  ENS:
+EndSub
+
+'Resualt Text Generator (Revamp System)
+Sub RESTEXT
+  RDIALAOG = "Practice Session Complete " 
+  RDIALAOG1 = "RESULTS: "
+  RESVA1 = "Score: " + Score + " "
+  RESVA2 = "Ticks: " + b + " "
+  RESVA3 = "Time Per Tick: " + c + " "
+  RDIALOGTXT = RDIALAOG + RDIALAOG1 + RESVA1 + RESVA2 + RESVA3 
+EndSub
+
+'Mouse Inputs In Active Context
+Sub ScoreInp
+  
+  'Detects Mouse Inputs For Score Manipulation
+  If Mouse.IsLeftButtonDown = "true" Then
+    ScoreUP()
+    
+  Else 
+    ScoreDown()
+  EndIf
+  
+EndSub
+
+'Score Manipuation 
+Sub ScoreUP
+  Score = Score + 1
+  SCORESYMB = Shapes.AddImage(CHKMRK)
+  Sound.PlayChimes()
+  Shapes.SetText(ScoreCounter2,Score) 
+EndSub
+
+Sub ScoreDown
+  Score = Score - 1
+  Sound.PlayChime()
+  SCORESYMB = Shapes.AddImage(XMARK)
+  Shapes.SetText(ScoreCounter2,Score) 
+EndSub
+
+'Debug Mode Variable (Note To Self Comment Out Later)
+Sub Debug
+  b = 5
+  c = 5
+  
+EndSub
+
+'Engine's Keystroke Reaction
+Sub Keystroke
+  If GraphicsWindow.LastKey = "Space" And Dormant = 1 Then
+    Dormant = 0
+  EndIf
+EndSub
+
+'Determines Context Of Mouse Input
+Sub ContextCheckM
+  
+  If EngineActive = 1 Then
+    MCLIC()
+  EndIf
+  
+EndSub
+
+Sub Endcard
+  GraphicsWindow.Clear()
+  Endcardtxt = Shapes.AddText(RESVA1)
+  
+EndSub
+
+
+Dormantmode:
+While Dormant = 1
+  
+EndWhile
+Goto ActiveMode
+
+Waitmode:
+While Dormant = 1
+  
+EndWhile
+Goto  ResetTag
+
